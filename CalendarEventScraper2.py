@@ -62,7 +62,7 @@ def main():
     print('Getting up to 20 events starting 1 week ago from today: ')
     print('')
     events_result = service.events().list(calendarId='primary', timeMin=oneWeekAgo,
-                                          timeMax=now, maxResults=20, singleEvents=True,
+                                          timeMax=now, singleEvents=True,
                                           orderBy='startTime').execute()
     events = events_result.get('items', [])
 
