@@ -43,7 +43,20 @@ def main():
             pickle.dump(creds, token)
 
     service = build('calendar', 'v3', credentials=creds)
-
+################################################################
+    # List all calendars available:
+    print('These are all the calendars available to read (calendar name followed by calendar ID)')
+    page_token = None
+    while True:
+        calendar_list = service.calendarList().list(pageToken=page_token).execute()
+        for calendar_list_entry in calendar_list['items']:
+            print(calendar_list_entry['summary'])
+            print(calendar_list_entry['id'])
+        page_token = calendar_list.get('nextPageToken')
+        if not page_token:
+            break
+    print('')
+################################################################
     # Call the Calendar API for one week ago through today
     now = datetime.today()
     #print("Current day and time is:")
@@ -59,8 +72,7 @@ def main():
 
     now = now.isoformat() + 'Z' # 'Z' indicates UTC time
 
-    print('Getting up to 20 events starting 1 week ago from today: ')
-    print('')
+    print('Getting events on primary calendar, starting 1 week ago from today: ')
     events_result = service.events().list(calendarId='primary', timeMin=oneWeekAgo,
                                           timeMax=now, singleEvents=True,
                                           orderBy='startTime').execute()
